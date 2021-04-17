@@ -1,0 +1,24 @@
+{
+  "name": "metro",
+  "version": "1.0.0",
+  "description": "A cooperative city-building game.",
+  "main": "server/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/usevalue/Metro.git"
+  },
+  "keywords": [
+    "nodejs",
+    "urban",
+    "game"
+  ],
+  "author": "James Pollard",
+  "license": "GPL-3.0-or-later",
+  "bugs": {
+    "url": "https://github.com/usevalue/Metro/issues"
+  },
+  "homepage": "https://github.com/usevalue/Metro#readme"
+}
