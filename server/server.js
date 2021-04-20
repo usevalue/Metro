@@ -96,7 +96,8 @@ app.post('/register', async (req, res)=>{
 app.use('/home/', playerRouter);
 app.use('/city/', guestRouter);
 
-// cron.schedule('* * * * * *', ()=>{
-//     console.log('lol')
-// })
+cron.schedule('1 5 10 15 * * * * *', ()=>{
+    console.log('lol')
+})
+
 app.listen(5000);

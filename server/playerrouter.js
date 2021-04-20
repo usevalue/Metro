@@ -8,9 +8,6 @@ const playerRouter = express.Router();
 
 const sim = new Simulator();
 
-sim.income();
-
-
 // Debugging
 playerRouter.use((req, res, next)=>{
     console.log(req.originalUrl);
