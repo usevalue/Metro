@@ -1,0 +1,13 @@
+<table  id="citygrid">
+    <% city.spatial.forEach((row)=> { %>
+        
+        <tr>
+            <% row.forEach((d)=> { %>
+                <td>
+                    <% console.log(d); %>
+                    <%- include('district.ejs', {district: d}) %>
+                </td>
+            <% }) %>
+        </tr>
+    <% }) %>
+</table>

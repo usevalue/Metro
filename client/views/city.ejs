@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <title><%=city.name%></title>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+    integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+    crossorigin="anonymous"></script>
+    <link href="/citystyles.css" rel="stylesheet" type="text/css" />
+    <meta charset="UTF-8">
+
+</head>
+<body>
+<table id="interface" border="0">
+    <tr>
+        <th colspan="2" style="font-size: 4em;"><%=city.name%></th>
+    </tr>
+    <tr>
+        <td align="center" rowspan="2">
+            <%- include('citygrid.ejs', {city: city}) %>
+        </td>
+        <td valign="top">
+            <%- include('controlpanel.ejs', {city: city}) %>
+        </td>
+    </tr>
+    <tr>
+        <td id="districtviewer"><!-- Filled by onClick --></td>
+    </tr>
+</table>
+
+<script src="/metro.js"></script>
+</body>
+
+</html>

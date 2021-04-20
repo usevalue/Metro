@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <title>Metro City Builder!</title>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+    integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+    crossorigin="anonymous"></script>
+    <meta charset="UTF-8">
+
+</head>
+
+<body bgcolor="antiquewhite">
+
+    <table align="center" style="font-size: 2em">
+        <tr>
+            <th colspan="3" style="font-size: 6em">Metro</th>
+        </tr>
+
+        <tr align="center">
+            <th>SIGN IN</th>
+            <td width="100" rowspan="2">or</td>
+            <th>REGISTER</th>
+        </tr>
+
+        <tr>
+            <td><form action="login" id="login" method="POST">
+                Username: <input type="text" name="username" id="loginname"/><br/>
+                Password: <input type="password" name="password" id="loginpw"/><br/>
+                <div align="center"><button type="submit" id="loginbutton" disabled>Play!</button></div>
+            </form></td>
+            <td><form id="registration" action="register" method="POST">
+                New Username: <input type="text" name="username" id="regname" /><br/>
+                Password: <input type="password" name="password" id="pw" /><br/>
+                Confirm Password: <input type="password" id="pwconfirm" /><br/>
+                <div align="center"><button type="submit" id="registerbutton" disabled>Welcome!</button></div>
+            </form></td>
+        </tr>
+    </table>
+
+    <script>
+    $(()=>{
+        $('#loginname, #loginpw').on('keyup', (key)=>{
+            if($('#loginname').val() == '' || $('#loginpw').val() == '') {
+                $('#loginbutton').prop('disabled', 'true');
+            }
+            else {
+                $('#loginbutton').removeAttr('disabled');
+            }
+        })
+
+        $('#regname, #pw, #pwconfirm').on('keyup', (key)=>{
+            if($('#regname').val() == ''
+                || $('#pw').val() == ''
+                || $('#pw').val()!=$('#pwconfirm').val()) {
+                $('#registerbutton').prop('disabled', 'true');
+            }
+            else {
+                $('#registerbutton').removeAttr('disabled');
+            }
+        })
+    });
+    </script>
+</body>
+
+
+
+</html>
