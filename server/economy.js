@@ -4,8 +4,8 @@ const {City} = require('./models.js')
 class Economy {
 
     constructor() {
-        // Execute every half hour
-        cron.schedule('0,30 * * * *', ()=>{this.income();});
+        // Execute every hour
+        cron.schedule('0 * * * *', ()=>{this.income();});
     }
 
     income() {
