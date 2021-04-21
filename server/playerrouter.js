@@ -8,46 +8,44 @@ const playerRouter = express.Router();
 
 const sim = new Simulator();
 
-// Debugging
-playerRouter.use((req, res, next)=>{
-    console.log(req.originalUrl);
-    next();
-})
 
-// Authentication
-const authenticated = (req, res, next) => {
-    if(req.session.isauthenticated) next();
-    else res.redirect('/');
+const checkCity = (req, res, next) => {
+    if(req.session.cityID && req.session.cityID!="") next();
+    else res.render('city/welcome');
 }
 
-playerRouter.use(authenticated);
-
-const getCity = (req, res, next)=>{
-    if(req.session.city) next();
-    else if(req.session.cityID) {
-        City.findById(req.session.cityID, (error, result) => {
-            if(error || !result) {
-                res.render('welcome');
-            }
-            else {
-                req.session.city = result;
-                next();
-            }
-        })
-    }
-    else {
-        res.render('welcome');
-    }
-}
-
-playerRouter.get('/', getCity, (req,res)=>{
-    res.render('city', {city: req.session.city});
+playerRouter.get('/', checkCity, (req,res)=>{
+    City.findById(req.session.cityID, (error, result)=>{
+        if(error) {
+            res.send('There was an error loading your city.  Please contact site administrators.')
+        }
+        else if(!result) {
+            User.findById(req.session.userid, async (error,result)=>{
+                if(error||!result) {
+                    req.session.destroy();
+                    res.redirect('/');
+                }
+                else {
+                    try {
+                        result.city = "";
+                        await result.save();
+                        res.redirect('/');
+                    }
+                    catch(e) {
+                        res.status(500).send('Unexplained error.');
+                    }
+                }
+            })
+        }
+        else res.render('city/city', {city: result});
+    })
 });
 
 playerRouter.post('/foundation', async (req,res) => {
     try {
-        let c = new City({name: req.body.cityname});
+        let c = new City(req.body);
         sim.setUpCity(c);
+        if(!c.mayor) c.mayor = req.session.username;
         await c.save();
         User.findById(req.session.userid, (error, result)=>{
             if(error) {
@@ -57,8 +55,8 @@ playerRouter.post('/foundation', async (req,res) => {
             else if(result) {
                 result.city = c._id;
                 result.save();
-                req.session.city = c;
-                res.redirect('/home');
+                req.session.cityID = c._id;
+                res.redirect('/home/');
             }
             else(res.redirect('/'));
         })
@@ -69,10 +67,15 @@ playerRouter.post('/foundation', async (req,res) => {
     }
 });
 
-playerRouter.get('/examinedistrict/:coords', (req, res)=>{
-    let coords = req.params.coords.split('_');
-    let dist = req.session.city.spatial[coords[0]][coords[1]];
-    res.render('district_detail', {district: dist});
+playerRouter.get('/examinedistrict/:coords', checkCity, (req, res)=>{
+    City.findById(req.session.cityID, (error, result)=>{
+        if(error || !result) res.send('No data.');
+        else {
+            let coords = req.params.coords.split('_');
+            let dist = result.spatial[coords[0]][coords[1]];
+            res.render('city/district_detail', {district: dist});
+        }
+    })
 })
 
 

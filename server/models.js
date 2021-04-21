@@ -29,7 +29,7 @@ const userSchema = new mongoose.Schema({
 // Geography
 
 const stockpile = new mongoose.Schema({
-    cash: {
+    concrete: {
         type: Number,
         default: 0
     },
@@ -37,11 +37,7 @@ const stockpile = new mongoose.Schema({
         type: Number,
         default: 0
     },
-    steel: { 
-        type: Number,
-        default: 0
-    },
-    concrete: {
+    steel: {
         type: Number,
         default: 0
     },
@@ -51,8 +47,8 @@ const stockpile = new mongoose.Schema({
     },
     emeralds: {
         type: Number,
+        default: 0
     },
-
 });
 
 const districtSchema = new mongoose.Schema({
@@ -86,14 +82,20 @@ const citySchema = new mongoose.Schema({
         unique: true,
         default: 'Metroville'
     },
+    mayor: {
+        type: String
+    },
     spatial: {
         type: [[districtSchema]],
         required: true,
     },
+    cash: {
+        type: Number,
+        default: 100
+    },
     reserves: {
         type: stockpile,
         default: {
-            cash: 10,
             lumber: 100,
             steel: 50,
             concrete: 10
@@ -101,6 +103,55 @@ const citySchema = new mongoose.Schema({
     }
 });
 
+
+// Messaging
+
+const messageSchema = new mongoose.Schema({
+    title: {
+        type: String,
+    },
+    message: {
+        type: String,
+        required: true
+    },
+    to: {
+        type: String,
+        required: true
+    },
+    from: {
+        type: String,
+        required: true
+    },
+    unread: {
+        type: Boolean,
+        default: true
+    },
+    saved: {
+        to: {
+            type: Boolean,
+            default: true,
+        },
+        from: {
+            type: Boolean,
+            default: true
+        }
+    },
+    trade: {
+        cashoffer: {
+            type: Number,
+        },
+        goodsoffer: {
+            type: stockpile,
+        },
+        goodsrequest: {
+            type: stockpile
+        }
+    }
+}, {
+    timestamps: {
+        sent_at: "sent_at"
+    }
+})
 
 const City = mongoose.model('City', citySchema, 'cities');
 

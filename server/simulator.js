@@ -1,6 +1,5 @@
 const height = 7;
 const width = 7;
-const {City} = require('./models.js')
 
 class Simulator {
 
@@ -30,12 +29,6 @@ class Simulator {
         city.spatial = spatial;
     }
 
-    income() {
-        City.find({},(error, result)=>{
-            if(error) console.log(error);
-            console.log(result);
-        })
-    }
 }
 
 module.exports = Simulator;
