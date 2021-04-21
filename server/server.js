@@ -62,10 +62,10 @@ app.use(session({
 
 
 // Debugging
-app.use((req, res, next)=>{
-    console.log(req.originalUrl);
-    next();
-})
+// app.use((req, res, next)=>{
+//     console.log(req.originalUrl);
+//     next();
+// })
 
 //
 //  Routing
@@ -97,6 +97,7 @@ app.post('/login', (req, res)=>{
                 res.send('That username isn\'t registered!');
             }
             else {
+                console.log(result);
                 try {
                     let match = await bcrypt.compare(req.body.password, result.password);
                     if(match) {
@@ -124,6 +125,7 @@ app.post('/register', async (req, res)=>{
         res.redirect('/home/');
     }
     catch(e) {
+        console.log(e);
         switch(e.code) {
             case 11000:
                 res.send('That username is already registered.');

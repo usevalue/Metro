@@ -42,24 +42,28 @@ playerRouter.get('/', checkCity, (req,res)=>{
 });
 
 playerRouter.post('/foundation', async (req,res) => {
+    console.log(req.session)
     try {
         let c = new City(req.body);
         sim.setUpCity(c);
         if(!c.mayor) c.mayor = req.session.username;
         await c.save();
+        req.session.cityID = c._id;
         User.findById(req.session.userid, (error, result)=>{
             if(error) {
                 console.log(error);
-                res.send('There was a problem creating your city.');
+                res.send('Error founding city.')
             }
-            else if(result) {
-                result.city = c._id;
+            else if(!result) {
+                console.log("user not found");
+                res.send('Are you sure you are logged in?');
+            }
+            else {
+                result.city = c._id
                 result.save();
-                req.session.cityID = c._id;
-                res.redirect('/home/');
+                res.redirect('/home/')
             }
-            else(res.redirect('/'));
-        })
+        });
     }
     catch(e) {
         res.send('That name\'s taken!');

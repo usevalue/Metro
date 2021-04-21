@@ -17,7 +17,6 @@ const userSchema = new mongoose.Schema({
     },
     city: {
         type: String,  // City's _id property
-        unique: true
     }
 }, {
     timestamps: {
