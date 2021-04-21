@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>Embassy of <%=city.name%></title>
+    </head>
+
+    <body><br/>
+        <div align="center">
+            <table cellpadding="10" cellspacing="10" >
+                <tr><th colspan="2" style="font-size: 3em"><%=city.name%></th></tr>
+                <tr>
+                    <td width="50%" valign="top"><%=city.name%> is governed by Mayor <%=city.mayor%><br/><br/>
+                        <%- include('../city/stockpile') %></td>
+
+                    <td valign="top">
+                        &nbsp;&nbsp;&nbsp;<i>Options:</i>
+                        <ul>
+                            <li><a href="../../writeto/<%=city.name%>/">Send a message</a></li>  
+                        </ul>
+                    </td>
+                </tr>
+            </table>
+            <p></p>
+        </div>
+    </body>
+
+</html>

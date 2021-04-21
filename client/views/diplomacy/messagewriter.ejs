@@ -1,0 +1,53 @@
+<html>
+
+<head>
+    <title>Writing to <%=recipient.name%></title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+    integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+    crossorigin="anonymous"></script>
+    <link href="/citystyles.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+    <br/><br/>
+<div align="center">
+<form action="sendmessage" method="POST">
+    <input type="hidden" id="from" name="from" value="<%=sender.name%>" />
+    <input type="hidden" id="to" name="to" value="<%=recipient.name%>" />
+    <table id="writer">
+        <tr>
+            <th>TO:</th>
+            <td>Mayor <%=recipient.mayor%> of <%=recipient.name%></td>
+        </tr>
+        <tr>
+            <th>FROM:</th>
+            <td>Mayor <%= sender.mayor %> of <%=sender.name%></td>
+        </tr>
+        <tr>
+            <td colspan="2"><textarea name="message" style="height: 8em; width: 60em"></textarea></td>
+        </tr>
+        <tr>
+            <th><button type="button" id="maketrade">Propose trade</button></th>
+            <th><button type="submit">SEND</button></th>
+        </tr>
+    </table>
+
+
+</form>
+</div>
+
+<script>
+    $(()=>{
+        $('#maketrade').on('click', ()=>{
+            console.log(':)')
+            $.ajax({
+                type: 'GET',
+                url: 'suggesttrade',
+                success: (data)=>{
+                    $('#writer').append(data);
+                }
+            })
+        });
+    })
+</script>
+</body>
+</html>

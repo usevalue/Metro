@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <title>Cities</title>
+    <link href="/citystyles.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+
+    <h1 align="center">Cities of the World</h1>
+
+    <table align="center">
+        <tr>
+            <th>City</th>
+            <th>Mayor</th>
+        </tr>
+        <% world.forEach((city)=>{%>
+        <tr>
+            <td><a href="embassy/<%=city.name%>/"><%=city.name%></td>
+            <td><%=city.mayor%></td>
+        </tr>
+        <%}); %>
+
+        </tr>
+    </table>
+</body>
+
+</html>
