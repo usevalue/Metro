@@ -5,6 +5,8 @@ const mongoose = require('mongoose');
 const path = require('path');
 const bcrypt = require('bcrypt');
 const salt = 10;
+const dotenv = require('dotenv');
+dotenv.config();
 
 const playerRouter = require('./playerrouter');
 const multiRouter = require('./multiplayerrouter');
@@ -12,6 +14,12 @@ const { User } = require('./models');
 
 const staticPath = path.join(__dirname, '../client/static/');
 const viewPath = path.join(__dirname, '../client/views/');
+
+//
+//  General configuration
+//
+
+const port = process.env.PORT || 5000;
 
 //
 //  Database configuration
@@ -128,4 +136,4 @@ app.post('/register', async (req, res)=>{
     }
 })
 
-app.listen(5000);
+app.listen(port);
