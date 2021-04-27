@@ -10,7 +10,7 @@ dotenv.config();
 
 const playerRouter = require('./playerrouter');
 const multiRouter = require('./multiplayerrouter');
-const { User } = require('./models');
+const User = require('./models/user.js');
 
 const staticPath = path.join(__dirname, '../client/static/');
 const viewPath = path.join(__dirname, '../client/views/');
@@ -30,7 +30,7 @@ const dburl = process.env.DB_URL || 'mongodb://127.0.0.1:27017/METRO';
 try {
     mongoose.connect(dburl, {useNewUrlParser: true, useUnifiedTopology: true});
     console.log('Connected to database.');
-    econ = require('./economy.js'); // Launches the economy
+    econ = require('./machines/economy.js'); // Launches the economy
 }
 catch (e) { console.log('There was a problem connnecting to the database server.'); }
 
@@ -62,10 +62,10 @@ app.use(session({
 
 
 // Debugging
-// app.use((req, res, next)=>{
-//     console.log(req.originalUrl);
-//     next();
-// })
+app.use((req, res, next)=>{
+    console.log(req.originalUrl);
+    next();
+})
 
 //
 //  Routing
@@ -105,7 +105,8 @@ app.post('/login', (req, res)=>{
                         req.session.userid = result._id;
                         req.session.username = result.username;
                         req.session.cityID = result.city;
-                        res.redirect('/home/');
+                        //res.redirect('/home/');
+                        res.redirect('/cities/');
                     }
                     else res.send('Incorrect password!');
                 }
@@ -122,6 +123,8 @@ app.post('/register', async (req, res)=>{
         let newUser = new User({username: req.body.username, password: hash})
         await newUser.save();
         req.session.isauthenticated=true;
+        req.session.userid=newUser._id;
+        req.session.username=newUser.username;
         res.redirect('/home/');
     }
     catch(e) {

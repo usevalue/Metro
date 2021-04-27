@@ -1,23 +1,11 @@
-<table>
-    <tr><th colspan="2">Resources</th></tr>
-    <tr>
-        <td>Concrete</td>
-        <td><%=city.reserves.concrete%></td>
-    </tr>
-    <tr>
-        <td>Lumber</td>
-        <td><%=city.reserves.lumber%></td>
-    </tr>
-    <tr>
-        <td>Steel</td>
-        <td><%=city.reserves.steel%></td>
-    </tr>
-    <tr>
-        <td>Gold</td>
-        <td><%=city.reserves.gold%></td>
-    </tr>
-    <tr>
-        <td>Emeralds</td>
-        <td><%=city.reserves.emeralds%></td>
-    </tr>
+<table style="text-transform:capitalize">
+    <tr><th colspan="3">Resources</th></tr>
+
+    <% city.reserves.forEach((resource)=>{ %>
+        <tr>
+            <td><%=resource.type%></td>
+            <td>. . . . . .&nbsp;&nbsp;</td>
+            <td><%=resource.amount%></td>
+        </tr>
+    <% }) %>
 </table>

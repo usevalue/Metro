@@ -1,7 +1,7 @@
 const express = require('express');
-const exampleCity = require('./example.js').sampleCity;
-const {User, City} = require('./models.js');
-const Simulator = require('./simulator.js');
+const City = require('./models/city.js');
+const User = require('./models/user.js')
+const Simulator = require('./machines/simulator.js');
 
 
 const playerRouter = express.Router();
@@ -10,7 +10,11 @@ const sim = new Simulator();
 
 
 const checkCity = (req, res, next) => {
-    if(req.session.cityID && req.session.cityID!="") next();
+    console.log(req.session)
+    if(req.session.cityID) {
+        if(req.session.cityID=="") res.render('city/welcome')
+        else next();
+    }
     else res.render('city/welcome');
 }
 
@@ -29,7 +33,7 @@ playerRouter.get('/', checkCity, (req,res)=>{
                     try {
                         result.city = "";
                         await result.save();
-                        res.redirect('/');
+                        res.render('city/welcome');
                     }
                     catch(e) {
                         res.status(500).send('Unexplained error.');
@@ -47,9 +51,7 @@ playerRouter.post('/foundation', async (req,res) => {
         let c = new City(req.body);
         sim.setUpCity(c);
         if(!c.mayor) c.mayor = req.session.username;
-        await c.save();
-        req.session.cityID = c._id;
-        User.findById(req.session.userid, (error, result)=>{
+        User.findById(req.session.userid, async (error, result)=>{
             if(error) {
                 console.log(error);
                 res.send('Error founding city.')
@@ -59,6 +61,8 @@ playerRouter.post('/foundation', async (req,res) => {
                 res.send('Are you sure you are logged in?');
             }
             else {
+                await c.save();
+                req.session.cityID = c._id;
                 result.city = c._id
                 result.save();
                 res.redirect('/home/')

@@ -5,22 +5,29 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"
     integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
     crossorigin="anonymous"></script>
-    <link href="/citystyles.css" rel="stylesheet" type="text/css" />
+    <link href="/pagestyles.css" rel="stylesheet" type="text/css" />
+
+    <style>
+        ul > li > input {
+            width: 4em
+        }
+    </style>
 </head>
 <body>
     <br/><br/>
 <div align="center">
 <form action="sendmessage" method="POST">
-    <input type="hidden" id="from" name="from" value="<%=sender.name%>" />
-    <input type="hidden" id="to" name="to" value="<%=recipient.name%>" />
+    <input type="hidden" id="address" name="address" />
+    <input type="hidden" id="signature" name="signature" />
+    <input type="hidden" id="from" name="from" value="<%=sender._id%>" />
+    <input type="hidden" id="to" name="to" value="<%=recipient._id%>" />
     <table id="writer">
         <tr>
-            <th>TO:</th>
-            <td>Mayor <%=recipient.mayor%> of <%=recipient.name%></td>
+            <th colspan="2" align="center" id="salutation"></th>
         </tr>
         <tr>
-            <th>FROM:</th>
-            <td>Mayor <%= sender.mayor %> of <%=sender.name%></td>
+            <th>SUBJECT:</th>
+            <td><input type="text" name="title" /></td>
         </tr>
         <tr>
             <td colspan="2"><textarea name="message" style="height: 8em; width: 60em"></textarea></td>
@@ -29,24 +36,97 @@
             <th><button type="button" id="maketrade">Propose trade</button></th>
             <th><button type="submit">SEND</button></th>
         </tr>
+        <tr id="tradebar" style="display:none" valign="top">
+            <td>
+                <b>We offer:</b>
+                <ul id="yourgoods">
+                    <li>$<input type="number"
+                            name="offered_cash"
+                            id="offered_cash"
+                            value="0" min="0">/<span id="sendercash"></span></li>
+                </ul>
+            </td>
+            <td>
+                <b>In exchange for:</b>
+                <ul id="theirgoods">
+                    <li>$<input
+                        type="number"
+                        name="requested_cash"
+                        id="requested_cash"
+                        value="0" min="0">/<span id="recipientcash"></span></li>
+                </ul>
+            </td>
+        </tr>
     </table>
 
 
 </form>
 </div>
-
+<%- include('../navbar.ejs') %>
 <script>
+    const sender = '<%=sender.name%>';
+    const recipient = '<%=recipient.name%>';
     $(()=>{
-        $('#maketrade').on('click', ()=>{
-            console.log(':)')
+
+        const address = "Mayor <%=recipient.mayor%> of " + recipient;
+        const signed = "Mayor <%=sender.mayor%> of " + sender;
+
+        $('#salutation').html("<i>To "+address+", from "+signed+"</i>");
+        $('#address').val(address);
+        $('#signature').val(signed);
+        //
+        //  Propose a trade
+        //
+
+        $('#maketrade').on('click', async function(event) {
+            $('#tradebar').show();
+            loadGoods('sender');
+            loadGoods('recipient');
+        });
+
+        //
+        //  Load trading data
+        //
+
+        const loadGoods = (participant) => {
+            // Who are we talking about?
+            let city;
+            let listArea;
+            if(participant=='sender') {
+                city=sender;
+                listArea=$('#yourgoods')
+            }
+            else {
+                city=recipient;
+                listArea=$('#theirgoods')
+            }
+
+            //  Get list of goods from server
+            
             $.ajax({
                 type: 'GET',
-                url: 'suggesttrade',
-                success: (data)=>{
-                    $('#writer').append(data);
+                url: '/cities/goods/'+city,
+                success: (data) => {
+                    let verb;
+                    if(participant=='sender') verb="offered"; else verb="requested";
+                    $("#"+verb+"_cash").attr('max',data.cash);
+                    $('#'+participant+'cash').html(data.cash);
+                    for(let i=0; i<data.goods.length; i++) {
+                        let item = data.goods[i]
+                        if(item.amount>0) {
+                            let entry = "<li>"+item.type+": <input "
+                                    + "type='number' "
+                                    + "name='"+verb+"_"+item.type+"' "
+                                    +"id='"+verb+"_"+item.type+"' "
+                                    +"value='0' min='0' "
+                                    +"max='"+item.amount+"' />/"
+                                    + item.amount + "</li>"
+                            listArea.append(entry);
+                        }
+                    }
                 }
             })
-        });
+        }
     })
 </script>
 </body>

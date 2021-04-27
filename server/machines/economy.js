@@ -1,11 +1,14 @@
 const cron = require('node-cron');
-const {City} = require('./models.js')
+const {City} = require('../models/city.js')
 
 class Economy {
 
     constructor() {
         // Execute every hour
-        cron.schedule('0 * * * *', ()=>{this.income();});
+
+        //  The following line of code schedules hourly income for all cities,
+        //  but does not function on heroku.
+        //  cron.schedule('0 * * * *', ()=>{this.income();});
     }
 
     income() {
@@ -22,6 +25,8 @@ class Economy {
         });
         console.log('Income allocated.');
     }
+
+
 
 }
 

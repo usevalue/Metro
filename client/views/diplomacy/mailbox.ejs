@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>Your mailbox</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+    integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+    crossorigin="anonymous"></script>
+    <link href="/pagestyles.css" rel="stylesheet" type="text/css" />
+    <style>
+        .mailtab {
+            font-weight: bold;
+            background-color: grey
+        }
+
+        .selected {
+            background-color: antiquewhite
+        }
+    </style>
+</head>
+
+<body>
+    <%- include('../navbar.ejs') %>
+    <table style="position: absolute; left: 200px; width:70%" border="1" cellspacing="0" cellpadding="4">
+    <tr>
+        <td id="inboxTab" class="mailtab selected" width="50%">Inbox</td>
+        <td id="sentTab" class="mailtab">Sent</td>
+    </tr>
+    <tr>
+        <td colspan="2">
+            <ul id="messagelist">
+                <li>Messsage to/from someone</li>
+            </ul>
+        </td>
+    </tr>
+    </table>
+    <%- include('../navbar.ejs') %>
+    <script>
+    $(()=>{
+
+
+        const getInbox = ()=>{
+            $.ajax({
+                type: 'GET',
+                url: 'inbox',
+                success: (data)=>{
+                    $('#messagelist').html('');
+                    for(let i=0; i<data.length; i++) {
+                        let message = data[i]
+                        let entry = "<li><a href='m/"+message._id+"/'>"+message.title+"</a> from "+message.signature+"</li>";
+                        $('#messagelist').append(entry);
+                    }
+                }
+            });
+        }
+
+        const getSent = ()=>{
+            $.ajax({
+                type: 'GET',
+                url: 'sentmail',
+                success: (data)=>{
+                    $('#messagelist').html('');
+                    for(let i=0; i<data.length; i++) {
+                        let message = data[i]
+                        let entry = "<li>To "+message.address+": <a href='m/"+message._id+"'>"+message.title+"</a></li>";
+                        $('#messagelist').append(entry);
+                    }
+                }
+            });
+        }
+
+        getInbox();
+
+        $('#inboxTab').on('click',(event)=>{
+            $('#sentTab').removeClass('selected');
+            $('#inboxTab').addClass('selected');
+            getInbox();
+        })
+
+        $('#sentTab').on('click',(event)=>{
+            $('#inboxTab').removeClass('selected');
+            $('#sentTab').addClass('selected');
+            getSent();
+        })
+
+    });
+    </script>
+</body>
+</html>

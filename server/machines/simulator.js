@@ -1,5 +1,5 @@
-const height = 7;
-const width = 7;
+const height = 3;
+const width = 3;
 
 class Simulator {
 

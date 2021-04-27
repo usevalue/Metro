@@ -1,0 +1,15 @@
+body {
+    background-color: antiquewhite;
+}
+
+#navbar {
+    color:blue;
+    position: absolute;
+    top: 10px
+}
+
+#column {
+    position: absolute;
+    left: 10%;
+    right: 10%
+}

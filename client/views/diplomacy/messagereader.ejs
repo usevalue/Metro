@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <title><%=message.title%></title>
+    <link href="/pagestyles.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+    <div id="column">
+    <h2>From <%=message.signature%> to <%=message.address%>:</h2>
+    <h2><%=message.title%></h2>
+    <%=message.parsedbody%>
+    </div>
+    <%-include('../navbar.ejs')%>
+</body>
+</html>
